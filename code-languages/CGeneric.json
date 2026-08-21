@@ -8,15 +8,11 @@
     "name": "C Generic",
     "author": "stacloud.dev@gmail.com",
     "uuid": "4720cb89-cfa7-44b2-90c7-685c7b8887f2",
-    "description": "C# Generic Egg cho STACloud, ho tro nhieu phien ban .NET va chay du an tu Git repo hoac file upload.",
+    "description": "C# Generic Egg cho STACloud, chi giu cac ban .NET LTS va chay du an tu Git repo hoac file upload.",
     "features": null,
     "docker_images": {
-        "Dotnet 8": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_8",
-        "Dotnet 7": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_7",
-        "Dotnet 6": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_6",
-        "Dotnet 5": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_5",
-        "Dotnet 3.1": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_3.1",
-        "Dotnet 2.1": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_2.1"
+        "Dotnet 8 (LTS Default)": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_8",
+        "Dotnet 10 (LTS)": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_10"
     },
     "file_denylist": [],
     "startup": "if [ -d .git ] && [ \"{{AUTO_UPDATE}}\" = \"1\" ]; then git pull; fi; cd {{PROJECT_DIR}}; dotnet restore; dotnet run --project {{PROJECT_FILE}}",

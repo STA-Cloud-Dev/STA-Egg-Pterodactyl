@@ -8,10 +8,12 @@
     "name": "Golang Generic",
     "author": "stacloud.dev@gmail.com",
     "uuid": "23520a9e-0711-4083-bad8-5601d635eb83",
-    "description": "Golang Generic Egg cho STACloud, dung de tai va build ung dung Go thanh file thuc thi.",
+    "description": "Golang Generic Egg cho STACloud, giu ban mac dinh cu va bo sung cac ban Go stable moi de tai va build ung dung Go thanh file thuc thi.",
     "features": null,
     "docker_images": {
-        "Golang 1.24": "ghcr.io/sta-cloud-dev/deverlopment:golang1.24"
+        "Golang 1.24 (Default)": "ghcr.io/sta-cloud-dev/deverlopment:golang1.24",
+        "Golang 1.27": "ghcr.io/sta-cloud-dev/deverlopment:golang1.27",
+        "Golang 1.26": "ghcr.io/sta-cloud-dev/deverlopment:golang1.26"
     },
     "file_denylist": [],
     "startup": "EXEC=\"${EXECUTABLE:-app}\"; chmod +x \"./${EXEC}\" 2>/dev/null || true; \"./${EXEC}\"",
@@ -24,7 +26,7 @@
     "scripts": {
         "installation": {
             "script": "#!/bin/bash\r\n# golang generic package\r\nset -e\r\n\r\nmkdir -p /mnt/server\r\nexport GOPATH=/mnt/server/go\r\nexport PATH=$PATH:/usr/local/go/bin:${GOPATH}/bin\r\ncd /mnt/server\r\n\r\nif [ -z \"${GO_PACKAGE}\" ]; then\r\n    echo \"GO_PACKAGE is blank. Skipping Go install so uploaded files can be used.\"\r\n    exit 0\r\nfi\r\n\r\nEXECUTABLE=\"${EXECUTABLE:-app}\"\r\n\r\ngo env -w GOPATH=\"${GOPATH}\"\r\n\r\nif echo \"${GO_PACKAGE}\" | grep -q '@'; then\r\n    GO_INSTALL_TARGET=\"${GO_PACKAGE}\"\r\nelse\r\n    GO_INSTALL_TARGET=\"${GO_PACKAGE}@latest\"\r\nfi\r\n\r\ngo install \"${GO_INSTALL_TARGET}\"\r\n\r\nPACKAGE_NAME=$(basename \"${GO_PACKAGE%%@*}\")\r\nif [ -f \"${GOPATH}/bin/${EXECUTABLE}\" ]; then\r\n    cp -f \"${GOPATH}/bin/${EXECUTABLE}\" /mnt/server/\r\nelif [ -f \"${GOPATH}/bin/${PACKAGE_NAME}\" ]; then\r\n    cp -f \"${GOPATH}/bin/${PACKAGE_NAME}\" \"/mnt/server/${EXECUTABLE}\"\r\nelse\r\n    echo \"Unable to locate built executable in ${GOPATH}/bin\"\r\n    exit 1\r\nfi\r\n\r\nchmod +x \"/mnt/server/${EXECUTABLE}\"",
-            "container": "golang:1.24-bookworm",
+            "container": "golang:1.27-bookworm",
             "entrypoint": "bash"
         }
     },

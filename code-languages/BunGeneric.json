@@ -8,10 +8,9 @@
     "name": "Bun Generic",
     "author": "stacloud.dev@gmail.com",
     "uuid": "a1b2c3d4-58cc-4372-b678-1f03c3d4e580",
-    "description": "Bun Generic Egg cho STACloud — hỗ trợ Bun latest và canary, chạy ứng dụng JavaScript/TypeScript từ Git repo hoặc file upload.",
+    "description": "Bun Generic Egg cho STACloud — chi giu Bun latest stable, chay ung dung JavaScript/TypeScript tu Git repo hoac file upload.",
     "features": null,
     "docker_images": {
-        "Bun Canary": "ghcr.io/sta-cloud-dev/deverlopment:bun_canary",
         "Bun Latest": "ghcr.io/sta-cloud-dev/deverlopment:bun_latest"
     },
     "file_denylist": [],
