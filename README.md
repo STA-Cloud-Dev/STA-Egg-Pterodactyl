@@ -1,84 +1,84 @@
 # STA-Egg-Pterodactyl
 
-Bo suu tap egg cho Pterodactyl va Pelican, duoc duy tri boi STACloud. Cac egg duoc dong goi theo dinh dang `PTDL_v2` va co the import truc tiep vao node hoac panel.
+Bộ sưu tập egg cho Pterodactyl và Pelican, được duy trì bởi STACloud. Các egg được đóng gói theo định dạng `PTDL_v2` và có thể import trực tiếp vào node hoặc panel.
 
-## Danh muc
+## Danh mục
 
 ### AI
 
-| Egg | Duong dan | Ghi chu |
+| Egg | Đường dẫn | Ghi chú |
 | --- | --- | --- |
-| OpenClaw | [`AI/OpenClaw.json`](AI/OpenClaw.json) | Chay OpenClaw Gateway voi persistent state trong `/home/container/.openclaw`. |
+| OpenClaw | [`AI/OpenClaw.json`](AI/OpenClaw.json) | Chạy OpenClaw Gateway với persistent state trong `/home/container/.openclaw`. |
 
-### Ngon ngu lap trinh
+### Ngôn ngữ lập trình
 
-| Egg | Duong dan | Ghi chu |
+| Egg | Đường dẫn | Ghi chú |
 | --- | --- | --- |
-| Bun Generic | [`code-languages/BunGeneric.json`](code-languages/BunGeneric.json) | Chay ung dung JavaScript/TypeScript bang Bun tu Git repo hoac file upload. |
-| C Generic | [`code-languages/CGeneric.json`](code-languages/CGeneric.json) | Chay du an .NET/C# tu Git repo hoac file upload. |
-| Golang Generic | [`code-languages/GolangGeneric.json`](code-languages/GolangGeneric.json) | Tai va build ung dung Go thanh file thuc thi. |
-| Java Generic | [`code-languages/JavaGeneric.json`](code-languages/JavaGeneric.json) | Chay ung dung Java tu file JAR, ho tro Java 8 den 25. |
-| Nodejs Generic | [`code-languages/NodejsGeneric.json`](code-languages/NodejsGeneric.json) | Chay ung dung JavaScript/TypeScript bang nhieu phien ban Node.js. |
-| Python Generic | [`code-languages/PythonGeneric.json`](code-languages/PythonGeneric.json) | Chay ung dung Python tu Git repo hoac file upload, ho tro Python 2.7 den 3.15. |
+| Bun Generic | [`code-languages/BunGeneric.json`](code-languages/BunGeneric.json) | Chạy ứng dụng JavaScript/TypeScript bằng Bun từ Git repo hoặc file upload. |
+| C Generic | [`code-languages/CGeneric.json`](code-languages/CGeneric.json) | Chạy dự án .NET/C# từ Git repo hoặc file upload. |
+| Golang Generic | [`code-languages/GolangGeneric.json`](code-languages/GolangGeneric.json) | Tải và build ứng dụng Go thành file thực thi. |
+| Java Generic | [`code-languages/JavaGeneric.json`](code-languages/JavaGeneric.json) | Chạy ứng dụng Java từ file JAR, hỗ trợ Java 8 đến 25. |
+| Nodejs Generic | [`code-languages/NodejsGeneric.json`](code-languages/NodejsGeneric.json) | Chạy ứng dụng JavaScript/TypeScript bằng nhiều phiên bản Node.js. |
+| Python Generic | [`code-languages/PythonGeneric.json`](code-languages/PythonGeneric.json) | Chạy ứng dụng Python từ Git repo hoặc file upload, hỗ trợ Python 2.7 đến 3.15. |
 
 ### Linux
 
-| Egg | Duong dan | Ghi chu |
+| Egg | Đường dẫn | Ghi chú |
 | --- | --- | --- |
-| STACloud Linux VPS | [`Linux/egg-linux.json`](Linux/egg-linux.json) | Linux VPS voi SSH va tuy chon giao dien VNC qua trinh duyet. |
+| STACloud Linux VPS | [`Linux/egg-linux.json`](Linux/egg-linux.json) | Linux VPS với SSH và tùy chọn giao diện VNC qua trình duyệt. |
 
 ### Minecraft
 
-| Egg | Duong dan | Ghi chu |
+| Egg | Đường dẫn | Ghi chú |
 | --- | --- | --- |
-| BungeeCord | [`minecraft/egg-bungeecord.json`](minecraft/egg-bungeecord.json) | Proxy ket noi nhieu Minecraft server. |
-| CanvasMC | [`minecraft/egg-canvas-mc.json`](minecraft/egg-canvas-mc.json) | Minecraft server voi cac toi uu ve tick, chunk va entity. |
-| Fabric | [`minecraft/egg-fabric.json`](minecraft/egg-fabric.json) | Modding toolchain cho Minecraft 1.14 tro len. |
-| Folia | [`minecraft/egg-folia.json`](minecraft/egg-folia.json) | Fork cua Paper voi regionized multithreading. |
-| Forge Enhanced | [`minecraft/egg-forge-enhanced.json`](minecraft/egg-forge-enhanced.json) | Minecraft Forge server voi startup tuy bien. |
-| Paper | [`minecraft/egg-paper.json`](minecraft/egg-paper.json) | Spigot fork huong toi hieu nang cao. |
-| PocketMine-MP | [`minecraft/egg-pterodactyl-pocketmine-m-p.json`](minecraft/egg-pterodactyl-pocketmine-m-p.json) | Chay PocketMine-MP cho Minecraft Bedrock. |
-| Vanilla Bedrock | [`minecraft/egg-vanilla-bedrock.json`](minecraft/egg-vanilla-bedrock.json) | Minecraft Bedrock server chinh chu. |
-| Vanilla Minecraft | [`minecraft/egg-vanilla-minecraft.json`](minecraft/egg-vanilla-minecraft.json) | Minecraft Java server chinh chu. |
+| BungeeCord | [`minecraft/egg-bungeecord.json`](minecraft/egg-bungeecord.json) | Proxy kết nối nhiều Minecraft server. |
+| CanvasMC | [`minecraft/egg-canvas-mc.json`](minecraft/egg-canvas-mc.json) | Minecraft server với các tối ưu về tick, chunk và entity. |
+| Fabric | [`minecraft/egg-fabric.json`](minecraft/egg-fabric.json) | Modding toolchain cho Minecraft 1.14 trở lên. |
+| Folia | [`minecraft/egg-folia.json`](minecraft/egg-folia.json) | Fork của Paper với regionized multithreading. |
+| Forge Enhanced | [`minecraft/egg-forge-enhanced.json`](minecraft/egg-forge-enhanced.json) | Minecraft Forge server với startup tùy biến. |
+| Paper | [`minecraft/egg-paper.json`](minecraft/egg-paper.json) | Spigot fork hướng tới hiệu năng cao. |
+| PocketMine-MP | [`minecraft/egg-pterodactyl-pocketmine-m-p.json`](minecraft/egg-pterodactyl-pocketmine-m-p.json) | Chạy PocketMine-MP cho Minecraft Bedrock. |
+| Vanilla Bedrock | [`minecraft/egg-vanilla-bedrock.json`](minecraft/egg-vanilla-bedrock.json) | Minecraft Bedrock server chính chủ. |
+| Vanilla Minecraft | [`minecraft/egg-vanilla-minecraft.json`](minecraft/egg-vanilla-minecraft.json) | Minecraft Java server chính chủ. |
 
-### Proxy va voice server
+### Proxy và voice server
 
-| Egg | Duong dan | Ghi chu |
+| Egg | Đường dẫn | Ghi chú |
 | --- | --- | --- |
-| STAShield | [`Proxy/egg-stashield.json`](Proxy/egg-stashield.json) | Proxy bao ve Minecraft Java va forward traffic toi backend. |
-| STA Cloud Velocity | [`Proxy/velocity.json`](Proxy/velocity.json) | Velocity proxy, ho tro Java 8, 11, 17, 21 va 25. |
-| LavaLink | [`voice-servers/LavaLink.json`](voice-servers/LavaLink.json) | Lavalink server, ho tro Java 8, 11, 17, 21 va 25. |
+| STAShield | [`Proxy/egg-stashield.json`](Proxy/egg-stashield.json) | Proxy bảo vệ Minecraft Java và forward traffic tới backend. |
+| STA Cloud Velocity | [`Proxy/velocity.json`](Proxy/velocity.json) | Velocity proxy, hỗ trợ Java 8, 11, 17, 21 và 25. |
+| LavaLink | [`voice-servers/LavaLink.json`](voice-servers/LavaLink.json) | Lavalink server, hỗ trợ Java 8, 11, 17, 21 và 25. |
 
-## Cach cai dat
+## Cách cài đặt
 
-1. Tai file JSON phu hop tu repository.
-2. Mo khu vuc **Nests** trong Pterodactyl Admin Panel.
-3. Chon nest muon dung, mo menu **Import Egg** va tai file JSON len.
-4. Kiem tra Docker image, startup command va cac bien moi truong truoc khi tao server.
-5. Tao server, gan allocation va khoi dong. Xem console de xac nhan qua trinh install da hoan tat.
+1. Tải file JSON phù hợp từ repository.
+2. Mở khu vực **Nests** trong Pterodactyl Admin Panel.
+3. Chọn nest muốn dùng, mở menu **Import Egg** và tải file JSON lên.
+4. Kiểm tra Docker image, startup command và các biến môi trường trước khi tạo server.
+5. Tạo server, gán allocation và khởi động. Xem console để xác nhận quá trình install đã hoàn tất.
 
-Neu panel cua ban khong co muc **Import Egg**, hay tham khao tai lieu cua phien ban panel dang su dung. Khong sua truc tiep file egg sau khi import neu khong can thiet; hay cap nhat tu file JSON goc de tranh sai lech cau hinh.
+Nếu panel của bạn không có mục **Import Egg**, hãy tham khảo tài liệu của phiên bản panel đang sử dụng. Không sửa trực tiếp file egg sau khi import nếu không cần thiết; hãy cập nhật từ file JSON gốc để tránh sai lệch cấu hình.
 
-## Luu y van hanh
+## Lưu ý vận hành
 
-- Doc mo ta cua tung bien moi truong truoc khi thay doi gia tri mac dinh.
-- Khong commit token, mat khau SSH, bot token hoac URL private vao egg.
-- Voi proxy, kiem tra backend host, backend port va allocation truoc khi public server.
-- Voi egg co script tai file tu Internet, nen pin version hoac kiem tra URL truoc khi deploy production.
-- Luon backup du lieu server truoc khi doi egg, Docker image hoac startup command.
+- Đọc mô tả của từng biến môi trường trước khi thay đổi giá trị mặc định.
+- Không commit token, mật khẩu SSH, bot token hoặc URL private vào egg.
+- Với proxy, kiểm tra backend host, backend port và allocation trước khi public server.
+- Với egg có script tải file từ Internet, nên pin version hoặc kiểm tra URL trước khi deploy production.
+- Luôn backup dữ liệu server trước khi đổi egg, Docker image hoặc startup command.
 
-## Dong gop
+## Đóng góp
 
-1. Tao branch cho thay doi cua ban.
-2. Sua file JSON dung dinh dang `PTDL_v2`, giu nguyen ten bien moi truong hien co neu khong co ly do bat buoc.
-3. Kiem tra JSON hop le va thu install/start tren mot server test.
-4. Mo pull request, mo ta ro thay doi, image yeu cau va cach kiem thu.
+1. Tạo branch cho thay đổi của bạn.
+2. Sửa file JSON đúng định dạng `PTDL_v2`, giữ nguyên tên biến môi trường hiện có nếu không có lý do bắt buộc.
+3. Kiểm tra JSON hợp lệ và thử install/start trên một server test.
+4. Mở pull request, mô tả rõ thay đổi, image yêu cầu và cách kiểm thử.
 
-## Giay phep va nguon
+## Giấy phép và nguồn
 
-Khi su dung egg co nguon tu du an ben ngoai, hay giu lai thong tin tac gia va tuan thu giay phep cua du an do. Cac egg trong repository co the co yeu cau rieng duoc ghi trong truong `author`, `description` hoac comment cua file.
+Khi sử dụng egg có nguồn từ dự án bên ngoài, hãy giữ lại thông tin tác giả và tuân thủ giấy phép của dự án đó. Các egg trong repository có thể có yêu cầu riêng được ghi trong trường `author`, `description` hoặc comment của file.
 
-## Lien he
+## Liên hệ
 
 - Email: `stacloud.dev@gmail.com`
-- To chuc: [STA Cloud Dev](https://github.com/STA-Cloud-Dev)
+- Tổ chức: [STA Cloud Dev](https://github.com/STA-Cloud-Dev)
