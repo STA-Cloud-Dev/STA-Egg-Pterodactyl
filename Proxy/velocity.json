@@ -1,0 +1,91 @@
+{
+    "_comment": "KHONG CHINH SUA: TEP DUOC TAO CHO STA CLOUD",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-05-25T00:00:00+07:00",
+    "name": "STA Cloud Velocity",
+    "author": "stacloud.dev@gmail.com",
+    "uuid": "49b4fa7f-8222-47a6-b19a-e4f58f4b80bd",
+    "description": "Velocity proxy egg cho STA Cloud. Ho tro Java 8, 11, 17, 21 va 25; mac dinh chay Java 21.",
+    "features": [
+        "eula",
+        "java_version",
+        "pid_limit"
+    ],
+    "docker_images": {
+        "Java 21": "ghcr.io/sta-cloud-dev/deverlopment:java_21",
+        "Java 25": "ghcr.io/sta-cloud-dev/deverlopment:java_25",
+        "Java 17": "ghcr.io/sta-cloud-dev/deverlopment:java_17",
+        "Java 11": "ghcr.io/sta-cloud-dev/deverlopment:java_11",
+        "Java 8": "ghcr.io/sta-cloud-dev/deverlopment:java_8"
+    },
+    "file_denylist": [],
+    "startup": "if [ -n \"${CUSTOM_STARTUP}\" ]; then eval \"${CUSTOM_STARTUP}\"; else java -Xms128M -Xmx{{SERVER_MEMORY}}M -XX:+UseG1GC -XX:G1HeapRegionSize=4M -XX:+UnlockExperimentalVMOptions -XX:+ParallelRefProcEnabled -XX:+AlwaysPreTouch -XX:MaxInlineLevel=15 -jar {{SERVER_JARFILE}}; fi",
+    "config": {
+        "files": "{\r\n    \"velocity.toml\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"bind = \": \"bind = \\\"0.0.0.0:{{server.build.default.port}}\\\"\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"done\": \"Done (\"\r\n}",
+        "logs": "{}",
+        "stop": "end"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!/bin/bash\r\nset -e\r\n\r\n# STA Cloud Velocity installation script\r\n# Server files: /mnt/server\r\nPROJECT=velocity\r\n\r\napt-get update\r\napt-get install -y --no-install-recommends curl jq\r\nrm -rf /var/lib/apt/lists/*\r\n\r\nif [[ -n \"${DL_PATH}\" ]]; then\r\n    echo -e \"Using supplied download URL: ${DL_PATH}\"\r\n    DOWNLOAD_URL=$(eval echo \"$(echo \"${DL_PATH}\" | sed -e 's/{{/${/g' -e 's/}}/}/g')\")\r\nelse\r\n    PROJECT_JSON=$(curl -fsSL \"https://fill.papermc.io/v3/projects/${PROJECT}\")\r\n\r\n    if [[ -z \"${VELOCITY_VERSION}\" ]] || [[ \"${VELOCITY_VERSION}\" == \"latest\" ]]; then\r\n        VELOCITY_VERSION=$(echo \"${PROJECT_JSON}\" | jq -r '.versions | to_entries | .[0].value[0]')\r\n    else\r\n        VER_EXISTS=$(echo \"${PROJECT_JSON}\" | jq -r --arg VERSION \"${VELOCITY_VERSION}\" '.versions | any(.[]; index($VERSION))')\r\n        if [[ \"${VER_EXISTS}\" != \"true\" ]]; then\r\n            echo -e \"Specified Velocity version not found. Defaulting to latest.\"\r\n            VELOCITY_VERSION=$(echo \"${PROJECT_JSON}\" | jq -r '.versions | to_entries | .[0].value[0]')\r\n        fi\r\n    fi\r\n\r\n    BUILDS_JSON=$(curl -fsSL \"https://fill.papermc.io/v3/projects/${PROJECT}/versions/${VELOCITY_VERSION}\")\r\n\r\n    if [[ -z \"${BUILD_NUMBER}\" ]] || [[ \"${BUILD_NUMBER}\" == \"latest\" ]]; then\r\n        BUILD_NUMBER=$(echo \"${BUILDS_JSON}\" | jq -r '.builds[0]')\r\n    else\r\n        BUILD_EXISTS=$(echo \"${BUILDS_JSON}\" | jq -r --arg BUILD \"${BUILD_NUMBER}\" '.builds[] | tostring | select(. == $BUILD)' | head -n 1)\r\n        if [[ -z \"${BUILD_EXISTS}\" ]]; then\r\n            echo -e \"Specified Velocity build not found. Defaulting to latest build for ${VELOCITY_VERSION}.\"\r\n            BUILD_NUMBER=$(echo \"${BUILDS_JSON}\" | jq -r '.builds[0]')\r\n        fi\r\n    fi\r\n\r\n    DOWNLOAD_URL=$(curl -fsSL \"https://fill.papermc.io/v3/projects/${PROJECT}/versions/${VELOCITY_VERSION}/builds/${BUILD_NUMBER}\" | jq -r '.downloads.\"server:default\".url')\r\nfi\r\n\r\ncd /mnt/server\r\n\r\necho -e \"Velocity version: ${VELOCITY_VERSION:-custom}\"\r\necho -e \"Velocity build: ${BUILD_NUMBER:-custom}\"\r\necho -e \"Downloading ${DOWNLOAD_URL}\"\r\n\r\nif [[ -f \"${SERVER_JARFILE}\" ]]; then\r\n    mv \"${SERVER_JARFILE}\" \"${SERVER_JARFILE}.old\"\r\nfi\r\n\r\ncurl -fL -o \"${SERVER_JARFILE}\" \"${DOWNLOAD_URL}\"\r\n\r\nif [[ ! -f velocity.toml ]]; then\r\n    echo -e \"Downloading default Velocity configuration.\"\r\n    curl -fL -o velocity.toml https://raw.githubusercontent.com/PaperMC/Velocity/dev/3.0.0/proxy/src/main/resources/default-velocity.toml\r\nfi\r\n\r\nif [[ ! -f forwarding.secret ]]; then\r\n    echo -e \"Creating forwarding secret.\"\r\n    date +%s | sha256sum | base64 | head -c 12 > forwarding.secret\r\nfi\r\n\r\necho -e \"STA Cloud Velocity installation complete.\"",
+            "container": "ghcr.io/sta-cloud-dev/linux:installer",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Custom Startup Command",
+            "description": "Optional command to run instead of the default Velocity startup command. Leave empty to use the default command.",
+            "env_variable": "CUSTOM_STARTUP",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:2048",
+            "field_type": "text"
+        },
+        {
+            "name": "Velocity Version",
+            "description": "Velocity version to download. Use latest to install the newest stable build.",
+            "env_variable": "VELOCITY_VERSION",
+            "default_value": "latest",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Server Jar File",
+            "description": "Jar file name used to start Velocity.",
+            "env_variable": "SERVER_JARFILE",
+            "default_value": "velocity.jar",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:32|regex:/^([\\w\\d._-]+)(\\.jar)$/",
+            "field_type": "text"
+        },
+        {
+            "name": "Download Path",
+            "description": "Direct jar URL. Hidden by default; leave empty to download from PaperMC.",
+            "env_variable": "DL_PATH",
+            "default_value": "",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Build Number",
+            "description": "Velocity build number. Use latest to install the newest build for the selected version.",
+            "env_variable": "BUILD_NUMBER",
+            "default_value": "latest",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        }
+    ]
+}
