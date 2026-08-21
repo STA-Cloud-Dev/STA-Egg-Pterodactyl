@@ -1,6 +1,5 @@
 # STA-Egg-Pterodactyl
 
-Bộ sưu tập egg cho Pterodactyl và Pelican, được duy trì bởi STACloud. Các egg được đóng gói theo định dạng `PTDL_v2` và có thể import trực tiếp vào node hoặc panel.
 
 ## Danh mục
 
