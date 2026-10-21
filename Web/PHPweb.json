@@ -1,0 +1,52 @@
+{
+    "_comment": "STACloud PHP Web Egg",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-10-22T00:00:00+00:00",
+    "name": "STACloud PHP Web",
+    "author": "stacloud.dev@gmail.com",
+    "description": "Generic PHP web hosting, PHP 5.6 through 8.5. EOL versions are for isolated migration only.",
+    "features": null,
+    "docker_images": {
+        "PHP 8.5 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.5",
+        "PHP 8.4 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.4",
+        "PHP 8.3 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.3",
+        "PHP 8.2 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.2",
+        "PHP 8.1 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.1",
+        "PHP 8.0 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.0",
+        "PHP 7.4 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_7.4",
+        "PHP 7.2 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_7.2",
+        "PHP 7.1 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_7.1",
+        "PHP 7.0 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_7.0",
+        "PHP 5.6 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_5.6"
+    },
+    "file_denylist": [],
+    "startup": "sh /entrypoint.sh",
+    "config": {
+        "files": "{}",
+        "startup": "{}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!/bin/bash\nset -euo pipefail\nmkdir -p /mnt/server\necho 'PHP Web: existing files are preserved. Upload your website using SFTP.'\n",
+            "container": "debian:bookworm-slim",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Web Root",
+            "description": "Use public for Laravel; . for regular PHP or WordPress",
+            "env_variable": "WEB_ROOT",
+            "default_value": ".",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|string|in:.,public",
+            "field_type": "text"
+        }
+    ]
+}
