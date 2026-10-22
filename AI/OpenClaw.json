@@ -1,0 +1,534 @@
+{
+    "_comment": "KHONG CHINH SUA: TEP DUOC TAO BOI STACLOUD",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-03-21T00:00:00+00:00",
+    "name": "OpenClaw",
+    "author": "stacloud.dev@gmail.com",
+    "uuid": "8a6c4e15-9c6b-4c7a-9d2e-3f7b2d9a6c51",
+    "description": "Egg OpenClaw cho STACloud, chay OpenClaw Gateway trong Pterodactyl voi persistent state tai /home/container/.openclaw.",
+    "features": null,
+    "docker_images": {
+        "OpenClaw Latest": "ghcr.io/sta-cloud-dev/ai:openclaw_latest",
+        "OpenClaw Latest New": "ghcr.io/sta-cloud-dev/ai:openclaw_latest"
+    },
+    "file_denylist": [],
+    "startup": "if [ -n \"${CUSTOM_STARTUP}\" ]; then eval \"${CUSTOM_STARTUP}\"; else openclaw gateway --allow-unconfigured --bind ${OPENCLAW_BIND} --port ${SERVER_PORT}; fi",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"listening on\"\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!/bin/bash\r\nmkdir -p /mnt/server/.openclaw /mnt/server/.openclaw/workspace /mnt/server/.openclaw/skills\r\necho \"OpenClaw installation completed.\"",
+            "container": "debian:bookworm-slim",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Custom Startup Command",
+            "description": "Optional command to run instead of the egg default startup. Leave empty to use the default startup command.",
+            "env_variable": "CUSTOM_STARTUP",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:2048",
+            "field_type": "text"
+        },
+        {
+            "name": "Gateway verbose",
+            "description": "Enable verbose gateway logs. true = verbose, false = normal.",
+            "env_variable": "OPENCLAW_VERBOSE",
+            "default_value": "true",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "Auto update OpenClaw",
+            "description": "Automatically check npm on every startup and install the newest OpenClaw runtime into writable server storage.",
+            "env_variable": "OPENCLAW_AUTO_UPDATE",
+            "default_value": "true",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "OpenClaw update version",
+            "description": "Version target to install at startup. Use 'latest' for newest builds or pin a version like '2026.4.2'.",
+            "env_variable": "OPENCLAW_UPDATE_OPENCLAW_VERSION",
+            "default_value": "latest",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:64",
+            "field_type": "text"
+        },
+        {
+            "name": "Gateway bind",
+            "description": "Listener bind mode for OpenClaw Gateway. Use 'lan' when behind a reverse proxy like Caddy/Nginx.",
+            "env_variable": "OPENCLAW_BIND",
+            "default_value": "lan",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:loopback,lan,tailnet,auto,custom",
+            "field_type": "text"
+        },
+        {
+            "name": "Custom bind host",
+            "description": "Required when Gateway bind is set to 'custom'. Enter the hostname or IP to bind to.",
+            "env_variable": "OPENCLAW_CUSTOM_BIND_HOST",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Gateway token",
+            "description": "Token for clients connecting to the OpenClaw Gateway. Required when binding beyond loopback.",
+            "env_variable": "OPENCLAW_GATEWAY_TOKEN",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Allowed origins",
+            "description": "Comma-separated HTTPS origins for Control UI when using non-loopback bind. Example: https://ai.user.com",
+            "env_variable": "OPENCLAW_ALLOWED_ORIGINS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:500",
+            "field_type": "text"
+        },
+        {
+            "name": "Host header fallback",
+            "description": "Set true to allow dangerous Host-header origin fallback when Allowed origins is empty.",
+            "env_variable": "OPENCLAW_ALLOW_HOST_HEADER_ORIGIN_FALLBACK",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "Extra gateway args",
+            "description": "Additional arguments appended to openclaw gateway.",
+            "env_variable": "OPENCLAW_ARGS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:500",
+            "field_type": "text"
+        },
+        {
+            "name": "Proxy upstream host",
+            "description": "Host written into the generated Caddy snippet and proxy manifest. Use 127.0.0.1 when Caddy runs on the same node, or set the node private IP when using a central proxy.",
+            "env_variable": "OPENCLAW_PROXY_UPSTREAM_HOST",
+            "default_value": "127.0.0.1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Telegram Bot Token",
+            "description": "Bot token for Telegram channel integration.",
+            "env_variable": "TELEGRAM_BOT_TOKEN",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Telegram DM Policy",
+            "description": "Who can DM the Telegram bot. 'open' = anyone, 'pairing' = require approval, 'allowlist' = only allowlisted users.",
+            "env_variable": "TELEGRAM_DM_POLICY",
+            "default_value": "open",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:open,pairing,allowlist",
+            "field_type": "text"
+        },
+        {
+            "name": "Telegram DM Allow From",
+            "description": "Comma-separated Telegram user IDs allowed to DM the bot (used when DM Policy is 'allowlist'). Leave blank to allow everyone ('*').",
+            "env_variable": "TELEGRAM_ALLOW_FROM",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:1000",
+            "field_type": "text"
+        },
+        {
+            "name": "Telegram Group Policy",
+            "description": "Who can use the bot in Telegram groups. 'open' = any group, 'allowlist' = only specified group IDs, 'disabled' = no groups.",
+            "env_variable": "TELEGRAM_GROUP_POLICY",
+            "default_value": "open",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:open,allowlist,disabled",
+            "field_type": "text"
+        },
+        {
+            "name": "Telegram Group Allow From",
+            "description": "Comma-separated Telegram group IDs allowed to use the bot (used when Group Policy is 'allowlist'). Example: -1001234567890,-1009876543210",
+            "env_variable": "TELEGRAM_GROUP_ALLOW_FROM",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:1000",
+            "field_type": "text"
+        },
+        {
+            "name": "Agent Default Model",
+            "description": "Default model for the main OpenClaw agent used by web chat and Telegram. Example: xai/grok-4.20-0309-non-reasoning",
+            "env_variable": "OPENCLAW_AGENT_MODEL",
+            "default_value": "xai/grok-4.20-0309-non-reasoning",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Anthropic API Key",
+            "description": "API key for Anthropic Claude models.",
+            "env_variable": "ANTHROPIC_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "OpenAI API Key",
+            "description": "API key for OpenAI GPT models.",
+            "env_variable": "OPENAI_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Gemini API Key",
+            "description": "API key for Google Gemini models.",
+            "env_variable": "GEMINI_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "DeepSeek API Key",
+            "description": "API key for DeepSeek models.",
+            "env_variable": "DEEPSEEK_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Groq API Key",
+            "description": "API key for Groq models.",
+            "env_variable": "GROQ_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Together AI API Key",
+            "description": "API key for Together AI models.",
+            "env_variable": "TOGETHER_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Mistral API Key",
+            "description": "API key for Mistral models.",
+            "env_variable": "MISTRAL_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "xAI API Key",
+            "description": "API key for xAI (Grok) models.",
+            "env_variable": "XAI_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Cerebras API Key",
+            "description": "API key for Cerebras models.",
+            "env_variable": "CEREBRAS_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "SambaNova API Key",
+            "description": "API key for SambaNova models.",
+            "env_variable": "SAMBANOVA_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Fireworks API Key",
+            "description": "API key for Fireworks AI models.",
+            "env_variable": "FIREWORKS_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Cohere API Key",
+            "description": "API key for Cohere models.",
+            "env_variable": "COHERE_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "OpenRouter API Key",
+            "description": "API key for OpenRouter (access many models via one key).",
+            "env_variable": "OPENROUTER_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Novita API Key",
+            "description": "API key for Novita AI models.",
+            "env_variable": "NOVITA_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Moonshot API Key",
+            "description": "API key for Moonshot (Kimi) models.",
+            "env_variable": "MOONSHOT_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "MiniMax API Key",
+            "description": "API key for MiniMax models.",
+            "env_variable": "MINIMAX_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Zhipu API Key",
+            "description": "API key for Zhipu (GLM) models.",
+            "env_variable": "ZHIPU_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "SiliconFlow API Key",
+            "description": "API key for SiliconFlow models.",
+            "env_variable": "SILICONFLOW_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "StepFun API Key",
+            "description": "API key for StepFun models.",
+            "env_variable": "STEPFUN_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Yi API Key",
+            "description": "API key for Yi (01.AI) models.",
+            "env_variable": "YI_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Baichuan API Key",
+            "description": "API key for Baichuan models.",
+            "env_variable": "BAICHUAN_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Discord Bot Token",
+            "description": "Bot token for Discord channel integration.",
+            "env_variable": "DISCORD_BOT_TOKEN",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Slack Bot Token",
+            "description": "Bot token for Slack channel integration.",
+            "env_variable": "SLACK_BOT_TOKEN",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Slack Signing Secret",
+            "description": "Signing secret for Slack (required for event verification).",
+            "env_variable": "SLACK_SIGNING_SECRET",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Zalo Bot Token",
+            "description": "Bot token for Zalo channel integration.",
+            "env_variable": "ZALO_BOT_TOKEN",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "MS Teams App ID",
+            "description": "Microsoft Teams bot App ID.",
+            "env_variable": "MSTEAMS_APP_ID",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "MS Teams App Password",
+            "description": "Microsoft Teams bot App Password.",
+            "env_variable": "MSTEAMS_APP_PASSWORD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Matrix Homeserver",
+            "description": "Matrix homeserver URL, e.g. https://matrix.org",
+            "env_variable": "MATRIX_HOMESERVER",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Matrix Access Token",
+            "description": "Matrix bot access token.",
+            "env_variable": "MATRIX_ACCESS_TOKEN",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Line Channel Secret",
+            "description": "LINE Messaging API channel secret.",
+            "env_variable": "LINE_CHANNEL_SECRET",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Line Channel Access Token",
+            "description": "LINE Messaging API channel access token.",
+            "env_variable": "LINE_CHANNEL_ACCESS_TOKEN",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "WhatsApp Session",
+            "description": "WhatsApp session name (for WhatsApp Web JS integration).",
+            "env_variable": "WHATSAPP_SESSION",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Node.js Memory (MB)",
+            "description": "Max old space size for Node.js in MB. Set to ~80% of available RAM. Default 1536MB.",
+            "env_variable": "NODE_OPTIONS_MAX_OLD_SPACE",
+            "default_value": "1536",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|min:512|max:65536",
+            "field_type": "text"
+        }
+    ]
+}

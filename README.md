@@ -1,6 +1,6 @@
 # STA Egg Pterodactyl
 
-Bộ **Egg Pterodactyl** do [STA Cloud Dev](https://github.com/STA-Cloud-Dev) phát triển và duy trì. Repository tập trung vào các template sẵn sàng import cho Minecraft, proxy, voice server, PHP và các ứng dụng chạy bằng ngôn ngữ lập trình phổ biến.
+Bộ **Egg Pterodactyl** do [STA Cloud Dev](https://github.com/STA-Cloud-Dev) phát triển và duy trì. Repository tập trung vào các template sẵn sàng import cho AI, Minecraft, proxy, voice server, PHP và các ứng dụng chạy bằng ngôn ngữ lập trình phổ biến.
 
 > **Định dạng:** `PTDL_v2`
 > **Tác giả mặc định:** `stacloud.dev@gmail.com`
@@ -17,6 +17,12 @@ Bộ **Egg Pterodactyl** do [STA Cloud Dev](https://github.com/STA-Cloud-Dev) ph
 
 ## Danh mục Egg
 
+### AI
+
+| Egg | Tệp | Mô tả |
+| --- | --- | --- |
+| OpenClaw | [`AI/OpenClaw.json`](AI/OpenClaw.json) | Chạy OpenClaw Gateway trên Pterodactyl với persistent state tại `/home/container/.openclaw`. |
+
 ### Ngôn ngữ lập trình
 
 | Egg | Tệp | Mô tả |
@@ -25,7 +31,7 @@ Bộ **Egg Pterodactyl** do [STA Cloud Dev](https://github.com/STA-Cloud-Dev) ph
 | C Generic | [`code-languages/CGeneric.json`](code-languages/CGeneric.json) | Chạy dự án C#/.NET với các phiên bản .NET LTS được hỗ trợ. |
 | Golang Generic | [`code-languages/GolangGeneric.json`](code-languages/GolangGeneric.json) | Tải mã nguồn và build ứng dụng Go thành file thực thi. |
 | Java Generic | [`code-languages/JavaGeneric.json`](code-languages/JavaGeneric.json) | Chạy ứng dụng Java từ file JAR với nhiều phiên bản Java. |
-| Node.js Generic | [`code-languages/NodejsGeneric.json`](code-languages/NodejsGeneric.json) | Chạy ứng dụng JavaScript/TypeScript bằng nhiều phiên bản Node.js. |
+| Node.js Generic | [`code-languages/NodejsGeneric.json`](code-languages/NodejsGeneric.json) | Chạy ứng dụng JavaScript/TypeScript bằng Node.js 22, 24 và 26. |
 | Python Generic | [`code-languages/PythonGeneric.json`](code-languages/PythonGeneric.json) | Chạy ứng dụng Python từ Git repository hoặc file upload. |
 
 ### PHP và Web

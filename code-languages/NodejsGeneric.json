@@ -11,7 +11,8 @@
     "description": "Nodejs Generic Egg cho STACloud, chi giu cac ban Nodejs LTS va chay ung dung JavaScript/TypeScript tu Git repo hoac file upload.",
     "features": null,
     "docker_images": {
-        "Nodejs 24 (LTS Default)": "ghcr.io/sta-cloud-dev/deverlopment:nodejs_24",
+        "Nodejs 26 (Default)": "ghcr.io/sta-cloud-dev/deverlopment:nodejs_26",
+        "Nodejs 24 (LTS)": "ghcr.io/sta-cloud-dev/deverlopment:nodejs_24",
         "Nodejs 22 (LTS)": "ghcr.io/sta-cloud-dev/deverlopment:nodejs_22"
     },
     "file_denylist": [],
