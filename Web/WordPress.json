@@ -1,0 +1,105 @@
+{
+    "_comment": "STACloud PHP Web Egg",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-10-22T00:00:00+00:00",
+    "name": "STACloud WordPress",
+    "author": "stacloud.dev@gmail.com",
+    "description": "WordPress auto installer with selectable WordPress release and patched PHP 8.2-8.5.",
+    "features": null,
+    "docker_images": {
+        "PHP 8.5 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.5",
+        "PHP 8.4 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.4",
+        "PHP 8.3 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.3",
+        "PHP 8.2 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.2"
+    },
+    "file_denylist": [],
+    "startup": "sh /entrypoint.sh",
+    "config": {
+        "files": "{}",
+        "startup": "{\n    \"done\": \"STACloud: web server ready\"\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!/bin/bash\nset -euo pipefail\napt-get update -qq\napt-get install -y --no-install-recommends ca-certificates curl tar\nmkdir -p /mnt/server\ncd /mnt/server\nif [ -n \"$(ls -A)\" ]; then echo 'Directory contains files; preserving existing WordPress installation.'; exit 0; fi\nver=\"${WORDPRESS_VERSION:-latest}\"\nif [ \"$ver\" = latest ]; then\n  url='https://wordpress.org/latest.tar.gz'\nelif [[ \"$ver\" =~ ^[0-9]+\\.[0-9]+(\\.[0-9]+)?$ ]]; then\n  url=\"https://wordpress.org/wordpress-${ver}.tar.gz\"\nelse\n  echo 'Invalid WordPress version' >&2\n  exit 1\nfi\n# Stream into a staging directory on the server volume, avoiding /tmp and duplicate archives.\nstage=\"$(mktemp -d /mnt/server/.wordpress-install.XXXXXX)\"\ntrap 'rm -rf -- \"$stage\"' EXIT\necho \"Downloading WordPress ${ver} ...\"\nif ! (curl --fail --location --show-error --silent --retry 3 \"$url\" | tar -xz -C \"$stage\" --strip-components=1); then\n  echo 'WordPress download/extraction failed. Check available disk space and inode quota.' >&2\n  df -h /mnt/server || true\n  df -i /mnt/server || true\n  exit 1\nfi\nif [ ! -f \"$stage/wp-settings.php\" ] || [ ! -d \"$stage/wp-includes\" ]; then\n  echo 'Invalid WordPress archive: expected files are missing.' >&2\n  exit 1\nfi\nshopt -s dotglob nullglob\nmv -- \"$stage\"/* /mnt/server/\necho 'WordPress downloaded. Configure the database through the web installer.'\n",
+            "container": "debian:bookworm-slim",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Web Root",
+            "description": "Use public for Laravel; . for regular PHP or WordPress",
+            "env_variable": "WEB_ROOT",
+            "default_value": ".",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|string|in:.,public",
+            "field_type": "text"
+        },
+        {
+            "name": "WordPress Version",
+            "description": "Use latest or a specific published release, e.g. 7.1.3.",
+            "env_variable": "WORDPRESS_VERSION",
+            "default_value": "latest",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:32",
+            "field_type": "text"
+        },
+        {
+            "name": "Install phpMyAdmin",
+            "description": "Optional database manager at /phpmyadmin/. Enable only on protected HTTPS hosting.",
+            "env_variable": "PHPMYADMIN_ENABLED",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "phpMyAdmin Version",
+            "description": "Latest stable phpMyAdmin release by default; optionally choose 5.2.3.",
+            "env_variable": "PHPMYADMIN_VERSION",
+            "default_value": "latest",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:latest,5.2.3",
+            "field_type": "text"
+        },
+        {
+            "name": "Database Host for phpMyAdmin",
+            "description": "External MySQL/TiDB host supported. For TiDB Cloud enter gateway01.ap-southeast-1.prod.aws.tidbcloud.com.",
+            "env_variable": "PHPMYADMIN_DB_HOST",
+            "default_value": "127.0.0.1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Database Port for phpMyAdmin",
+            "description": "Database server port: 3306 for standard MySQL, 4000 for TiDB Cloud.",
+            "env_variable": "PHPMYADMIN_DB_PORT",
+            "default_value": "3306",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|between:1,65535",
+            "field_type": "text"
+        },
+        {
+            "name": "Verified Database TLS for phpMyAdmin",
+            "description": "Enable verified TLS when connecting to TiDB Cloud or other TLS databases.",
+            "env_variable": "PHPMYADMIN_DB_SSL",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        }
+    ]
+}

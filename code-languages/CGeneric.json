@@ -15,10 +15,10 @@
         "Dotnet 10 (LTS)": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_10"
     },
     "file_denylist": [],
-    "startup": "if [ -d .git ] && [ \"{{AUTO_UPDATE}}\" = \"1\" ]; then git pull; fi; cd {{PROJECT_DIR}}; dotnet restore; dotnet run --project {{PROJECT_FILE}}",
+    "startup": "if [ -d .git ] && [ \"{{AUTO_UPDATE}}\" = \"1\" ]; then git pull; fi; cd {{PROJECT_DIR}}; dotnet restore; printf '%s%s\\n' 'STACloud: ' 'application starting'; dotnet run --project {{PROJECT_FILE}}",
     "config": {
         "files": "{}",
-        "startup": "{\r\n    \"done\": [\r\n        \"change this text 1\",\r\n        \"change this text 2\"\r\n    ]\r\n}",
+        "startup": "{\n    \"done\": \"STACloud: application starting\"\n}",
         "logs": "{}",
         "stop": "^C"
     },

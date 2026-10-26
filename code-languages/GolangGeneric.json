@@ -16,10 +16,10 @@
         "Golang 1.26": "ghcr.io/sta-cloud-dev/deverlopment:golang1.26"
     },
     "file_denylist": [],
-    "startup": "EXEC=\"${EXECUTABLE:-app}\"; chmod +x \"./${EXEC}\" 2>/dev/null || true; \"./${EXEC}\"",
+    "startup": "EXEC=\"${EXECUTABLE:-app}\"; chmod +x \"./${EXEC}\" 2>/dev/null || true; printf '%s%s\\n' 'STACloud: ' 'application starting'; \"./${EXEC}\"",
     "config": {
         "files": "{}",
-        "startup": "{\r\n    \"done\": \"change this part\"\r\n}",
+        "startup": "{\n    \"done\": \"STACloud: application starting\"\n}",
         "logs": "{}",
         "stop": "^C"
     },

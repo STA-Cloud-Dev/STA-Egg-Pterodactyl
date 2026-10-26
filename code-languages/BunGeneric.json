@@ -14,10 +14,10 @@
         "Bun Latest": "ghcr.io/sta-cloud-dev/deverlopment:bun_latest"
     },
     "file_denylist": [],
-    "startup": "if [[ -d .git ]] && [[ \"{{AUTO_UPDATE}}\" == \"1\" ]]; then git pull; fi; if [ -f package.json ]; then bun install; fi; bun run \"{{MAIN_FILE}}\"",
+    "startup": "if [[ -d .git ]] && [[ \"{{AUTO_UPDATE}}\" == \"1\" ]]; then git pull; fi; if [ -f package.json ]; then bun install; fi; printf '%s%s\\n' 'STACloud: ' 'application starting'; bun run \"{{MAIN_FILE}}\"",
     "config": {
         "files": "{}",
-        "startup": "{\r\n    \"done\": \"change this part\"\r\n}",
+        "startup": "{\n    \"done\": \"STACloud: application starting\"\n}",
         "logs": "{}",
         "stop": "^C"
     },

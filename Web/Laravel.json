@@ -1,0 +1,104 @@
+{
+    "_comment": "STACloud PHP Web Egg",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-10-22T00:00:00+00:00",
+    "name": "STACloud Laravel",
+    "author": "stacloud.dev@gmail.com",
+    "description": "Laravel 12 or 13 with selectable supported patched PHP images, Composer installation and public web root.",
+    "features": null,
+    "docker_images": {
+        "PHP 8.5 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.5",
+        "PHP 8.4 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.4",
+        "PHP 8.3 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.3"
+    },
+    "file_denylist": [],
+    "startup": "sh /entrypoint.sh",
+    "config": {
+        "files": "{}",
+        "startup": "{\n    \"done\": \"STACloud: web server ready\"\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!/bin/bash\nset -euo pipefail\ncase \"${LARAVEL_VERSION:-13}\" in 12|13) ;; *) echo 'Unsupported Laravel major version' >&2; exit 1;; esac\nmkdir -p /mnt/server\ncd /mnt/server\nif [ -n \"$(ls -A)\" ]; then echo 'Directory contains files; preserving existing application.'; exit 0; fi\ncomposer create-project --no-interaction --prefer-dist \"laravel/laravel:${LARAVEL_VERSION}.*\" .\nphp artisan key:generate --force\necho 'Configure DB_* variables in .env before serving your application.'\n",
+            "container": "composer:2",
+            "entrypoint": "sh"
+        }
+    },
+    "variables": [
+        {
+            "name": "Web Root",
+            "description": "Laravel document root (default: public). Choose . only if your application requires it.",
+            "env_variable": "WEB_ROOT",
+            "default_value": "public",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:.,public",
+            "field_type": "text"
+        },
+        {
+            "name": "Laravel Version",
+            "description": "Laravel major version; Laravel 13 needs PHP 8.3+; Laravel 12 supports PHP 8.2+ (choose matching image).",
+            "env_variable": "LARAVEL_VERSION",
+            "default_value": "13",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:12,13",
+            "field_type": "text"
+        },
+        {
+            "name": "Install phpMyAdmin",
+            "description": "Optional database manager at /phpmyadmin/. Enable only on protected HTTPS hosting.",
+            "env_variable": "PHPMYADMIN_ENABLED",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "phpMyAdmin Version",
+            "description": "Latest stable phpMyAdmin release by default; optionally choose 5.2.3.",
+            "env_variable": "PHPMYADMIN_VERSION",
+            "default_value": "latest",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:latest,5.2.3",
+            "field_type": "text"
+        },
+        {
+            "name": "Database Host for phpMyAdmin",
+            "description": "External MySQL/TiDB host supported. For TiDB Cloud enter gateway01.ap-southeast-1.prod.aws.tidbcloud.com.",
+            "env_variable": "PHPMYADMIN_DB_HOST",
+            "default_value": "127.0.0.1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Database Port for phpMyAdmin",
+            "description": "Database server port: 3306 for standard MySQL, 4000 for TiDB Cloud.",
+            "env_variable": "PHPMYADMIN_DB_PORT",
+            "default_value": "3306",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|between:1,65535",
+            "field_type": "text"
+        },
+        {
+            "name": "Verified Database TLS for phpMyAdmin",
+            "description": "Enable verified TLS when connecting to TiDB Cloud or other TLS databases.",
+            "env_variable": "PHPMYADMIN_DB_SSL",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        }
+    ]
+}
