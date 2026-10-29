@@ -44,7 +44,7 @@
             "env_variable": "WEB_ROOT",
             "default_value": ".",
             "user_viewable": true,
-            "user_editable": false,
+            "user_editable": true,
             "rules": "required|string|in:.,public",
             "field_type": "text"
         }
