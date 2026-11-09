@@ -55,7 +55,7 @@
             "default_value": "512M",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|regex:/^([0-9]+[KkMmGg]?|-1)$/",
+            "rules": "required|string|regex:~\\A(?!-(?!1\\z))-?[0-9]+[KkMmGg]?\\z~",
             "field_type": "text"
         },
         {
