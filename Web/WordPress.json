@@ -25,7 +25,7 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!/bin/bash\nset -euo pipefail\napt-get update -qq\napt-get install -y --no-install-recommends ca-certificates curl tar\nmkdir -p /mnt/server\ncd /mnt/server\nif [ -n \"$(ls -A)\" ]; then echo 'Directory contains files; preserving existing WordPress installation.'; exit 0; fi\nver=\"${WORDPRESS_VERSION:-latest}\"\nif [ \"$ver\" = latest ]; then\n  url='https://wordpress.org/latest.tar.gz'\nelif [[ \"$ver\" =~ ^[0-9]+\\.[0-9]+(\\.[0-9]+)?$ ]]; then\n  url=\"https://wordpress.org/wordpress-${ver}.tar.gz\"\nelse\n  echo 'Invalid WordPress version' >&2\n  exit 1\nfi\n# Stream into a staging directory on the server volume, avoiding /tmp and duplicate archives.\nstage=\"$(mktemp -d /mnt/server/.wordpress-install.XXXXXX)\"\ntrap 'rm -rf -- \"$stage\"' EXIT\necho \"Downloading WordPress ${ver} ...\"\nif ! (curl --fail --location --show-error --silent --retry 3 \"$url\" | tar -xz -C \"$stage\" --strip-components=1); then\n  echo 'WordPress download/extraction failed. Check available disk space and inode quota.' >&2\n  df -h /mnt/server || true\n  df -i /mnt/server || true\n  exit 1\nfi\nif [ ! -f \"$stage/wp-settings.php\" ] || [ ! -d \"$stage/wp-includes\" ]; then\n  echo 'Invalid WordPress archive: expected files are missing.' >&2\n  exit 1\nfi\nshopt -s dotglob nullglob\nmv -- \"$stage\"/* /mnt/server/\necho 'WordPress downloaded. Configure the database through the web installer.'\n",
+            "script": "#!/bin/bash\nset -euo pipefail\napt-get update -qq\napt-get install -y --no-install-recommends ca-certificates curl tar\nmkdir -p /mnt/server\ncd /mnt/server\nif [ -n \"$(ls -A)\" ]; then echo 'Directory contains files; preserving existing WordPress installation.'; \nmkdir -p /mnt/server/.stacloud\nif [ ! -e /mnt/server/.stacloud/php.ini ]; then\n    ( set -C; cat > /mnt/server/.stacloud/php.ini <<'INI'\n; STACloud custom PHP settings. Restart after editing.\n; Active directives override the PHP fields in Startup.\n; memory_limit = 256M\n; upload_max_filesize = 64M\n; post_max_size = 80M\n; date.timezone = Asia/Ho_Chi_Minh\n; max_input_vars = 5000\nINI\n    )\nfi\nexit 0; fi\nver=\"${WORDPRESS_VERSION:-latest}\"\nif [ \"$ver\" = latest ]; then\n  url='https://wordpress.org/latest.tar.gz'\nelif [[ \"$ver\" =~ ^[0-9]+\\.[0-9]+(\\.[0-9]+)?$ ]]; then\n  url=\"https://wordpress.org/wordpress-${ver}.tar.gz\"\nelse\n  echo 'Invalid WordPress version' >&2\n  exit 1\nfi\n# Stream into a staging directory on the server volume, avoiding /tmp and duplicate archives.\nstage=\"$(mktemp -d /mnt/server/.wordpress-install.XXXXXX)\"\ntrap 'rm -rf -- \"$stage\"' EXIT\necho \"Downloading WordPress ${ver} ...\"\nif ! (curl --fail --location --show-error --silent --retry 3 \"$url\" | tar -xz -C \"$stage\" --strip-components=1); then\n  echo 'WordPress download/extraction failed. Check available disk space and inode quota.' >&2\n  df -h /mnt/server || true\n  df -i /mnt/server || true\n  exit 1\nfi\nif [ ! -f \"$stage/wp-settings.php\" ] || [ ! -d \"$stage/wp-includes\" ]; then\n  echo 'Invalid WordPress archive: expected files are missing.' >&2\n  exit 1\nfi\nshopt -s dotglob nullglob\nmv -- \"$stage\"/* /mnt/server/\necho 'WordPress downloaded. Configure the database through the web installer.'\nmkdir -p /mnt/server/.stacloud\nif [ ! -e /mnt/server/.stacloud/php.ini ]; then\n    ( set -C; cat > /mnt/server/.stacloud/php.ini <<'INI'\n; STACloud custom PHP settings. Restart after editing.\n; Active directives override the PHP fields in Startup.\n; memory_limit = 256M\n; upload_max_filesize = 64M\n; post_max_size = 80M\n; date.timezone = Asia/Ho_Chi_Minh\n; max_input_vars = 5000\nINI\n    )\nfi\n",
             "container": "debian:bookworm-slim",
             "entrypoint": "bash"
         }
@@ -63,12 +63,12 @@
         },
         {
             "name": "phpMyAdmin Version",
-            "description": "Latest stable phpMyAdmin release by default; optionally choose 5.2.3.",
+            "description": "latest or an exact published release, e.g. 4.9.11 or 5.2.3. Choose a release compatible with the PHP image: phpMyAdmin 4.9 needs PHP 5.5+, 5.0/5.1 need PHP 7.1.3+, 5.2 needs PHP 7.2.5+. Latest may require newer PHP.",
             "env_variable": "PHPMYADMIN_VERSION",
             "default_value": "latest",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:latest,5.2.3",
+            "rules": "required|string|max:32|regex:/^(latest|[0-9]+\\.[0-9]+\\.[0-9]+(\\.[0-9]+)?)$/",
             "field_type": "text"
         },
         {
@@ -99,6 +99,86 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "PHP Memory Limit",
+            "description": "PHP memory per process; the container RAM limit still applies.",
+            "env_variable": "PHP_MEMORY_LIMIT",
+            "default_value": "512M",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|regex:/^([0-9]+[KkMmGg]?|-1)$/",
+            "field_type": "text"
+        },
+        {
+            "name": "PHP Upload Max Filesize",
+            "description": "Maximum size of one uploaded file. Keep Post Max Size larger.",
+            "env_variable": "PHP_UPLOAD_MAX_FILESIZE",
+            "default_value": "256M",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|regex:/^[0-9]+[KkMmGg]?$/",
+            "field_type": "text"
+        },
+        {
+            "name": "PHP Post Max Size",
+            "description": "Maximum POST request size. Also check Web Max Body Size.",
+            "env_variable": "PHP_POST_MAX_SIZE",
+            "default_value": "300M",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|regex:/^[0-9]+[KkMmGg]?$/",
+            "field_type": "text"
+        },
+        {
+            "name": "PHP Max Execution Time",
+            "description": "PHP execution timeout in seconds; 0 disables the PHP timeout.",
+            "env_variable": "PHP_MAX_EXECUTION_TIME",
+            "default_value": "300",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|between:0,86400",
+            "field_type": "text"
+        },
+        {
+            "name": "PHP Timezone",
+            "description": "PHP timezone, e.g. Asia/Ho_Chi_Minh.",
+            "env_variable": "PHP_TIMEZONE",
+            "default_value": "UTC",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:64|regex:/^[A-Za-z0-9_+\\/-]+$/",
+            "field_type": "text"
+        },
+        {
+            "name": "PHP Display Errors",
+            "description": "Show PHP errors in responses. Keep Off on public production websites.",
+            "env_variable": "PHP_DISPLAY_ERRORS",
+            "default_value": "Off",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:On,Off",
+            "field_type": "text"
+        },
+        {
+            "name": "Custom php.ini File",
+            "description": "Custom INI file relative to server files. .stacloud/php.ini is created automatically without overwriting edits. Restart to apply; active settings override the PHP fields above.",
+            "env_variable": "PHP_INI_FILE",
+            "default_value": ".stacloud/php.ini",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:200|regex:/^[A-Za-z0-9_.\\/-]+\\.ini$/",
+            "field_type": "text"
+        },
+        {
+            "name": "Web Max Body Size",
+            "description": "Nginx request body limit, e.g. 320m or 1g; 0 disables it. Legacy PHP images use PHP limits instead.",
+            "env_variable": "WEB_MAX_BODY_SIZE",
+            "default_value": "320m",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|regex:/^[0-9]+[kKmMgG]?$/",
             "field_type": "text"
         }
     ]

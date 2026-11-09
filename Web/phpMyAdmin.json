@@ -1,0 +1,172 @@
+{
+    "_comment": "STACloud standalone phpMyAdmin Web Egg",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-10-22T00:00:00+00:00",
+    "name": "STACloud phpMyAdmin",
+    "author": "stacloud.dev@gmail.com",
+    "description": "Standalone phpMyAdmin at /. Select a compatible phpMyAdmin release and PHP 5.6-8.5 image. Configure database host, port and verified TLS; sign in with database credentials.",
+    "features": null,
+    "docker_images": {
+        "PHP 8.5 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.5",
+        "PHP 8.4 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.4",
+        "PHP 8.3 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.3",
+        "PHP 8.2 (patched)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.2",
+        "PHP 8.1 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.1",
+        "PHP 8.0 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_8.0",
+        "PHP 7.4 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_7.4",
+        "PHP 7.2 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_7.2",
+        "PHP 7.1 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_7.1",
+        "PHP 7.0 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_7.0",
+        "PHP 5.6 (EOL - migration only)": "ghcr.io/sta-cloud-dev/deverlopment:php_5.6"
+    },
+    "file_denylist": [],
+    "startup": "sh /entrypoint.sh",
+    "config": {
+        "files": "{}",
+        "startup": "{\n    \"done\": \"STACloud: web server ready\"\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "container": "debian:bookworm-slim",
+            "entrypoint": "bash",
+            "script": "#!/bin/bash\nset -e\nmkdir -p /mnt/server\nmkdir -p /mnt/server/.stacloud\nif [ ! -e /mnt/server/.stacloud/php.ini ]; then\n    ( set -C; cat > /mnt/server/.stacloud/php.ini <<'INI'\n; STACloud custom PHP settings. Restart after editing.\n; Active directives override the PHP fields in Startup.\n; memory_limit = 256M\n; upload_max_filesize = 64M\n; post_max_size = 80M\n; date.timezone = Asia/Ho_Chi_Minh\n; max_input_vars = 5000\nINI\n    )\nfi\necho \"STACloud phpMyAdmin: files preserved; phpMyAdmin is installed on first startup.\"\n"
+        }
+    },
+    "variables": [
+        {
+            "name": "Standalone phpMyAdmin",
+            "description": "Dedicated phpMyAdmin service at the site root; installed automatically on startup.",
+            "env_variable": "PHPMYADMIN_STANDALONE",
+            "default_value": "true",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|string|in:true",
+            "field_type": "text"
+        },
+        {
+            "name": "phpMyAdmin Version",
+            "description": "latest or an exact published release, e.g. 4.9.11 or 5.2.3. Choose a release compatible with the PHP image: phpMyAdmin 4.9 needs PHP 5.5+, 5.0/5.1 need PHP 7.1.3+, 5.2 needs PHP 7.2.5+. Latest may require newer PHP.",
+            "env_variable": "PHPMYADMIN_VERSION",
+            "default_value": "latest",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:32|regex:/^(latest|[0-9]+\\.[0-9]+\\.[0-9]+(\\.[0-9]+)?)$/",
+            "field_type": "text"
+        },
+        {
+            "name": "Database Host for phpMyAdmin",
+            "description": "External MySQL/TiDB host supported. For TiDB Cloud enter gateway01.ap-southeast-1.prod.aws.tidbcloud.com.",
+            "env_variable": "PHPMYADMIN_DB_HOST",
+            "default_value": "127.0.0.1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:255",
+            "field_type": "text"
+        },
+        {
+            "name": "Database Port for phpMyAdmin",
+            "description": "Database server port: 3306 for standard MySQL, 4000 for TiDB Cloud.",
+            "env_variable": "PHPMYADMIN_DB_PORT",
+            "default_value": "3306",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|between:1,65535",
+            "field_type": "text"
+        },
+        {
+            "name": "Verified Database TLS for phpMyAdmin",
+            "description": "Enable verified TLS when connecting to TiDB Cloud or other TLS databases.",
+            "env_variable": "PHPMYADMIN_DB_SSL",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:true,false",
+            "field_type": "text"
+        },
+        {
+            "name": "PHP Memory Limit",
+            "description": "PHP memory per process; the container RAM limit still applies.",
+            "env_variable": "PHP_MEMORY_LIMIT",
+            "default_value": "512M",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|regex:/^([0-9]+[KkMmGg]?|-1)$/",
+            "field_type": "text"
+        },
+        {
+            "name": "PHP Upload Max Filesize",
+            "description": "Maximum size of one uploaded file. Keep Post Max Size larger.",
+            "env_variable": "PHP_UPLOAD_MAX_FILESIZE",
+            "default_value": "256M",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|regex:/^[0-9]+[KkMmGg]?$/",
+            "field_type": "text"
+        },
+        {
+            "name": "PHP Post Max Size",
+            "description": "Maximum POST request size. Also check Web Max Body Size.",
+            "env_variable": "PHP_POST_MAX_SIZE",
+            "default_value": "300M",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|regex:/^[0-9]+[KkMmGg]?$/",
+            "field_type": "text"
+        },
+        {
+            "name": "PHP Max Execution Time",
+            "description": "PHP execution timeout in seconds; 0 disables the PHP timeout.",
+            "env_variable": "PHP_MAX_EXECUTION_TIME",
+            "default_value": "300",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|between:0,86400",
+            "field_type": "text"
+        },
+        {
+            "name": "PHP Timezone",
+            "description": "PHP timezone, e.g. Asia/Ho_Chi_Minh.",
+            "env_variable": "PHP_TIMEZONE",
+            "default_value": "UTC",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:64|regex:/^[A-Za-z0-9_+\\/-]+$/",
+            "field_type": "text"
+        },
+        {
+            "name": "PHP Display Errors",
+            "description": "Show PHP errors in responses. Keep Off on public production websites.",
+            "env_variable": "PHP_DISPLAY_ERRORS",
+            "default_value": "Off",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:On,Off",
+            "field_type": "text"
+        },
+        {
+            "name": "Custom php.ini File",
+            "description": "Custom INI file relative to server files. .stacloud/php.ini is created automatically without overwriting edits. Restart to apply; active settings override the PHP fields above.",
+            "env_variable": "PHP_INI_FILE",
+            "default_value": ".stacloud/php.ini",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:200|regex:/^[A-Za-z0-9_.\\/-]+\\.ini$/",
+            "field_type": "text"
+        },
+        {
+            "name": "Web Max Body Size",
+            "description": "Nginx request body limit, e.g. 320m or 1g; 0 disables it. Legacy PHP images use PHP limits instead.",
+            "env_variable": "WEB_MAX_BODY_SIZE",
+            "default_value": "320m",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|regex:/^[0-9]+[kKmMgG]?$/",
+            "field_type": "text"
+        }
+    ]
+}

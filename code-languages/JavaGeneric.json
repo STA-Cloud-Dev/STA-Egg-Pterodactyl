@@ -18,7 +18,7 @@
         "Java 8 (LTS)": "ghcr.io/sta-cloud-dev/deverlopment:java_8"
     },
     "file_denylist": [],
-    "startup": "printf '%s%s\\n' 'STACloud: ' 'application starting'; java -Dterminal.jline=false -Dterminal.ansi=true -jar {{JARFILE}}",
+    "startup": "bash /opt/stacloud/code-languages/start.sh java",
     "config": {
         "files": "{}",
         "startup": "{\n    \"done\": \"STACloud: application starting\"\n}",
@@ -45,4 +45,3 @@
         }
     ]
 }
-

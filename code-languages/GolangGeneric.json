@@ -16,7 +16,7 @@
         "Golang 1.26": "ghcr.io/sta-cloud-dev/deverlopment:golang1.26"
     },
     "file_denylist": [],
-    "startup": "EXEC=\"${EXECUTABLE:-app}\"; chmod +x \"./${EXEC}\" 2>/dev/null || true; printf '%s%s\\n' 'STACloud: ' 'application starting'; \"./${EXEC}\"",
+    "startup": "bash /opt/stacloud/code-languages/start.sh golang",
     "config": {
         "files": "{}",
         "startup": "{\n    \"done\": \"STACloud: application starting\"\n}",
