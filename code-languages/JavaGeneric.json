@@ -28,7 +28,7 @@
     "scripts": {
         "installation": {
             "script": "#!/bin/bash\r\n# Java Installation Script\r\n#\r\n# Server Files: /mnt/server\r\napt update\r\napt install -y curl jq\r\n\r\nmkdir -p /mnt/server\r\ncd /mnt/server",
-            "container": "eclipse-temurin:21-jre-jammy",
+            "container": "ghcr.io/sta-cloud-dev/deverlopment:java_21",
             "entrypoint": "bash"
         }
     },

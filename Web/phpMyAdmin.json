@@ -32,7 +32,7 @@
     },
     "scripts": {
         "installation": {
-            "container": "debian:bookworm-slim",
+            "container": "ghcr.io/sta-cloud-dev/oses:debian_bookworm",
             "entrypoint": "bash",
             "script": "#!/bin/bash\nset -e\nmkdir -p /mnt/server\nmkdir -p /mnt/server/.stacloud\nif [ ! -e /mnt/server/.stacloud/php.ini ]; then\n    ( set -C; cat > /mnt/server/.stacloud/php.ini <<'INI'\n; STACloud custom PHP settings. Restart after editing.\n; Active directives override the PHP fields in Startup.\n; memory_limit = 256M\n; upload_max_filesize = 64M\n; post_max_size = 80M\n; date.timezone = Asia/Ho_Chi_Minh\n; max_input_vars = 5000\nINI\n    )\nfi\necho \"STACloud phpMyAdmin: files preserved; phpMyAdmin is installed on first startup.\"\n"
         }

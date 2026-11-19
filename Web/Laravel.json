@@ -25,7 +25,7 @@
     "scripts": {
         "installation": {
             "script": "#!/bin/sh\nset -eu\nLARAVEL_VERSION=${LARAVEL_VERSION:-13}\ncase \"${LARAVEL_VERSION:-13}\" in 12|13) ;; *) echo 'Unsupported Laravel major version' >&2; exit 1;; esac\nmkdir -p /mnt/server\ncd /mnt/server\nif [ -n \"$(ls -A)\" ]; then echo 'Directory contains files; preserving existing application.'; \nmkdir -p /mnt/server/.stacloud\nif [ ! -e /mnt/server/.stacloud/php.ini ]; then\n    ( set -C; cat > /mnt/server/.stacloud/php.ini <<'INI'\n; STACloud custom PHP settings. Restart after editing.\n; Active directives override the PHP fields in Startup.\n; memory_limit = 256M\n; upload_max_filesize = 64M\n; post_max_size = 80M\n; date.timezone = Asia/Ho_Chi_Minh\n; max_input_vars = 5000\nINI\n    )\nfi\nexit 0; fi\ncomposer create-project --no-interaction --prefer-dist \"laravel/laravel:${LARAVEL_VERSION}.*\" .\nphp artisan key:generate --force\necho 'Configure DB_* variables in .env before serving your application.'\nmkdir -p /mnt/server/.stacloud\nif [ ! -e /mnt/server/.stacloud/php.ini ]; then\n    ( set -C; cat > /mnt/server/.stacloud/php.ini <<'INI'\n; STACloud custom PHP settings. Restart after editing.\n; Active directives override the PHP fields in Startup.\n; memory_limit = 256M\n; upload_max_filesize = 64M\n; post_max_size = 80M\n; date.timezone = Asia/Ho_Chi_Minh\n; max_input_vars = 5000\nINI\n    )\nfi\n",
-            "container": "composer:2",
+            "container": "ghcr.io/sta-cloud-dev/deverlopment:php_8.5",
             "entrypoint": "sh"
         }
     },

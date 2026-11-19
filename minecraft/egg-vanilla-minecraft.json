@@ -14,11 +14,11 @@
         "pid_limit"
     ],
     "docker_images": {
-        "Java 21": "ghcr.io\/sta-cloud-dev\/deverlopment:java_21",
-        "Java 25": "ghcr.io\/sta-cloud-dev\/deverlopment:java_25",
-        "Java 17": "ghcr.io\/sta-cloud-dev\/deverlopment:java_17",
-        "Java 11": "ghcr.io\/sta-cloud-dev\/deverlopment:java_11",
-        "Java 8": "ghcr.io\/sta-cloud-dev\/deverlopment:java_8"
+        "Java 21": "ghcr.io/sta-cloud-dev/deverlopment:java_21",
+        "Java 25": "ghcr.io/sta-cloud-dev/deverlopment:java_25",
+        "Java 17": "ghcr.io/sta-cloud-dev/deverlopment:java_17",
+        "Java 11": "ghcr.io/sta-cloud-dev/deverlopment:java_11",
+        "Java 8": "ghcr.io/sta-cloud-dev/deverlopment:java_8"
     },
     "file_denylist": [],
     "startup": "java -Xms128M -XX:MaxRAMPercentage=95.0 -jar {{SERVER_JARFILE}}",
@@ -30,9 +30,9 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/ash\r\n# Vanilla MC Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\nLATEST_VERSION=`curl https:\/\/launchermeta.mojang.com\/mc\/game\/version_manifest.json | jq -r '.latest.release'`\r\nLATEST_SNAPSHOT_VERSION=`curl https:\/\/launchermeta.mojang.com\/mc\/game\/version_manifest.json | jq -r '.latest.snapshot'`\r\n\r\necho -e \"latest version is $LATEST_VERSION\"\r\necho -e \"latest snapshot is $LATEST_SNAPSHOT_VERSION\"\r\n\r\nif [ -z \"$VANILLA_VERSION\" ] || [ \"$VANILLA_VERSION\" == \"latest\" ]; then\r\n  MANIFEST_URL=$(curl -sSL https:\/\/launchermeta.mojang.com\/mc\/game\/version_manifest.json | jq --arg VERSION $LATEST_VERSION -r '.versions | .[] | select(.id== $VERSION )|.url')\r\nelif [ \"$VANILLA_VERSION\" == \"snapshot\" ]; then\r\n  MANIFEST_URL=$(curl -sSL https:\/\/launchermeta.mojang.com\/mc\/game\/version_manifest.json | jq --arg VERSION $LATEST_SNAPSHOT_VERSION -r '.versions | .[] | select(.id== $VERSION )|.url')\r\nelse\r\n  MANIFEST_URL=$(curl -sSL https:\/\/launchermeta.mojang.com\/mc\/game\/version_manifest.json | jq --arg VERSION $VANILLA_VERSION -r '.versions | .[] | select(.id== $VERSION )|.url')\r\nfi\r\n\r\nDOWNLOAD_URL=$(curl ${MANIFEST_URL} | jq .downloads.server | jq -r '. | .url')\r\n\r\necho -e \"running: curl -o ${SERVER_JARFILE} $DOWNLOAD_URL\"\r\ncurl -o ${SERVER_JARFILE} $DOWNLOAD_URL\r\n\r\necho -e \"Install Complete\"",
-            "container": "ghcr.io\/pterodactyl\/installers:alpine",
-            "entrypoint": "ash"
+            "script": "#!/bin/bash\n# Shared installer helpers, embedded in egg JSON by sync.py.\nset -euo pipefail\nexport LC_ALL=C\nmkdir -p /mnt/server\ncd /mnt/server\napt-get update\napt-get install -y --no-install-recommends ca-certificates curl jq unzip\nUSER_AGENT='STACloudMultiEgg/1.0 (stacloud.dev@gmail.com)'\nfetch() { curl --fail --silent --show-error --location --retry 3 --connect-timeout 20 --max-time 180 -A \"$USER_AGENT\" \"$@\"; }\njar_name() {\n    case \"$1\" in ''|-*|/*|*..*|*[!a-zA-Z0-9_./-]*) echo 'Invalid server JAR filename' >&2; return 1 ;; esac\n}\ndownload_jar() (\n    url=$1\n    target=$2\n    checksum=${3:-}\n    jar_name \"$target\"\n    case \"$url\" in https://*) ;; *) echo 'Download URL must use HTTPS' >&2; exit 1 ;; esac\n    mkdir -p \"$(dirname \"$target\")\"\n    tmp=$(mktemp \"${target}.download.XXXXXX\")\n    trap 'rm -f \"$tmp\"' EXIT\n    fetch -o \"$tmp\" \"$url\"\n    [ -s \"$tmp\" ] && unzip -tq \"$tmp\" >/dev/null || { echo 'Downloaded file is not a valid JAR/ZIP; existing JAR preserved.' >&2; exit 1; }\n    if [ -n \"$checksum\" ] && [ \"$checksum\" != null ]; then\n        printf '%s  %s\\n' \"$checksum\" \"$tmp\" | sha256sum -c - || exit 1\n    fi\n    mv -f \"$tmp\" \"$target\"\n)\ninstall_properties() {\n    if [ ! -f server.properties ]; then\n        fetch -o server.properties.download https://raw.githubusercontent.com/ptero-eggs/game-eggs/main/minecraft/java/server.properties\n        mv server.properties.download server.properties\n    fi\n}\n\nmanifest=$(fetch https://piston-meta.mojang.com/mc/game/version_manifest_v2.json)\nversion=${VANILLA_VERSION:-latest}\ncase \"$version\" in\n    latest) version=$(jq -er '.latest.release' <<< \"$manifest\") ;;\n    snapshot) version=$(jq -er '.latest.snapshot' <<< \"$manifest\") ;;\nesac\nurl=$(jq -er --arg version \"$version\" '.versions[] | select(.id == $version) | .url' <<< \"$manifest\")\nmetadata=$(fetch \"$url\")\ndownload_jar \"$(jq -er '.downloads.server.url // empty' <<< \"$metadata\")\" \"${SERVER_JARFILE:-server.jar}\"\ninstall_properties\necho 'Installation completed.'\n",
+            "container": "ghcr.io/sta-cloud-dev/oses:debian_bookworm",
+            "entrypoint": "bash"
         }
     },
     "variables": [
@@ -43,7 +43,7 @@
             "default_value": "server.jar",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|regex:\/^([\\w\\d._-]+)(\\.jar)$\/",
+            "rules": "required|regex:/^([\\w\\d._-]+)(\\.jar)$/",
             "field_type": "text"
         },
         {

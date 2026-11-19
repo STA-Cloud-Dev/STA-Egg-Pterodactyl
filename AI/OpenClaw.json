@@ -25,7 +25,7 @@
     "scripts": {
         "installation": {
             "script": "#!/bin/bash\r\nmkdir -p /mnt/server/.openclaw /mnt/server/.openclaw/workspace /mnt/server/.openclaw/skills\r\necho \"OpenClaw installation completed.\"",
-            "container": "debian:bookworm-slim",
+            "container": "ghcr.io/sta-cloud-dev/oses:debian_bookworm",
             "entrypoint": "bash"
         }
     },

@@ -14,11 +14,11 @@
         "pid_limit"
     ],
     "docker_images": {
-        "Java 21": "ghcr.io\/sta-cloud-dev\/deverlopment:java_21",
-        "Java 25": "ghcr.io\/sta-cloud-dev\/deverlopment:java_25",
-        "Java 17": "ghcr.io\/sta-cloud-dev\/deverlopment:java_17",
-        "Java 11": "ghcr.io\/sta-cloud-dev\/deverlopment:java_11",
-        "Java 8": "ghcr.io\/sta-cloud-dev\/deverlopment:java_8"
+        "Java 21": "ghcr.io/sta-cloud-dev/deverlopment:java_21",
+        "Java 25": "ghcr.io/sta-cloud-dev/deverlopment:java_25",
+        "Java 17": "ghcr.io/sta-cloud-dev/deverlopment:java_17",
+        "Java 11": "ghcr.io/sta-cloud-dev/deverlopment:java_11",
+        "Java 8": "ghcr.io/sta-cloud-dev/deverlopment:java_8"
     },
     "file_denylist": [],
     "startup": "if [ -n \"${CUSTOM_STARTUP}\" ]; then eval \"${CUSTOM_STARTUP}\"; else java -Xms128M -XX:MaxRAMPercentage=95.0 -jar {{SERVER_JARFILE}}; fi",
@@ -30,9 +30,9 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/ash\r\n# Bungeecord Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\n\r\ncd \/mnt\/server\r\n\r\nif [ -z \"${BUNGEE_VERSION}\" ] || [ \"${BUNGEE_VERSION}\" == \"latest\" ]; then\r\n    BUNGEE_VERSION=\"lastStableBuild\"\r\nfi\r\n\r\ncurl -o ${SERVER_JARFILE} https:\/\/ci.md-5.net\/job\/BungeeCord\/${BUNGEE_VERSION}\/artifact\/bootstrap\/target\/BungeeCord.jar",
-            "container": "ghcr.io\/pterodactyl\/installers:alpine",
-            "entrypoint": "ash"
+            "script": "#!/bin/bash\n# Shared installer helpers, embedded in egg JSON by sync.py.\nset -euo pipefail\nexport LC_ALL=C\nmkdir -p /mnt/server\ncd /mnt/server\napt-get update\napt-get install -y --no-install-recommends ca-certificates curl jq unzip\nUSER_AGENT='STACloudMultiEgg/1.0 (stacloud.dev@gmail.com)'\nfetch() { curl --fail --silent --show-error --location --retry 3 --connect-timeout 20 --max-time 180 -A \"$USER_AGENT\" \"$@\"; }\njar_name() {\n    case \"$1\" in ''|-*|/*|*..*|*[!a-zA-Z0-9_./-]*) echo 'Invalid server JAR filename' >&2; return 1 ;; esac\n}\ndownload_jar() (\n    url=$1\n    target=$2\n    checksum=${3:-}\n    jar_name \"$target\"\n    case \"$url\" in https://*) ;; *) echo 'Download URL must use HTTPS' >&2; exit 1 ;; esac\n    mkdir -p \"$(dirname \"$target\")\"\n    tmp=$(mktemp \"${target}.download.XXXXXX\")\n    trap 'rm -f \"$tmp\"' EXIT\n    fetch -o \"$tmp\" \"$url\"\n    [ -s \"$tmp\" ] && unzip -tq \"$tmp\" >/dev/null || { echo 'Downloaded file is not a valid JAR/ZIP; existing JAR preserved.' >&2; exit 1; }\n    if [ -n \"$checksum\" ] && [ \"$checksum\" != null ]; then\n        printf '%s  %s\\n' \"$checksum\" \"$tmp\" | sha256sum -c - || exit 1\n    fi\n    mv -f \"$tmp\" \"$target\"\n)\ninstall_properties() {\n    if [ ! -f server.properties ]; then\n        fetch -o server.properties.download https://raw.githubusercontent.com/ptero-eggs/game-eggs/main/minecraft/java/server.properties\n        mv server.properties.download server.properties\n    fi\n}\n\nversion=${BUNGEE_VERSION:-lastStableBuild}\ncase \"$version\" in *[!a-zA-Z0-9_-]*) echo 'Invalid BungeeCord build' >&2; exit 1 ;; esac\ndownload_jar \"https://ci.md-5.net/job/BungeeCord/$version/artifact/bootstrap/target/BungeeCord.jar\" \"${SERVER_JARFILE:-server.jar}\"\necho 'Installation completed.'\n",
+            "container": "ghcr.io/sta-cloud-dev/oses:debian_bookworm",
+            "entrypoint": "bash"
         }
     },
     "variables": [
@@ -63,7 +63,7 @@
             "default_value": "bungeecord.jar",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|regex:\/^([\\w\\d._-]+)(\\.jar)$\/",
+            "rules": "required|regex:/^([\\w\\d._-]+)(\\.jar)$/",
             "field_type": "text"
         }
     ]
