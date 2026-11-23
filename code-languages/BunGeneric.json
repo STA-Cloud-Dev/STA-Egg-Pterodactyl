@@ -1,14 +1,14 @@
 {
-    "_comment": "KHÔNG CHỈNH SỬA: TỆP ĐƯỢC TẠO BỞI STACLOUD - TROLYAMAZON",
+    "_comment": "STA Cloud Code Languages. Shared startup/install sources: code-languages/.",
     "meta": {
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2026-03-03T00:00:00+00:00",
-    "name": "Bun Generic",
+    "exported_at": "2026-11-23T00:00:00+07:00",
+    "name": "STA Cloud | Bun",
     "author": "stacloud.dev@gmail.com",
     "uuid": "a1b2c3d4-58cc-4372-b678-1f03c3d4e580",
-    "description": "Bun Generic Egg cho STACloud — chi giu Bun latest stable, chay ung dung JavaScript/TypeScript tu Git repo hoac file upload.",
+    "description": "STA Cloud Bun runtime. Chạy ứng dụng Bun từ Git HTTPS hoặc file upload; hỗ trợ file chính hoặc package script.",
     "features": null,
     "docker_images": {
         "Bun Latest": "ghcr.io/sta-cloud-dev/deverlopment:bun_latest"

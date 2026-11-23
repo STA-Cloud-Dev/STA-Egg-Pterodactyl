@@ -3,7 +3,7 @@
 Bộ **Egg Pterodactyl** do [STA Cloud Dev](https://github.com/STA-Cloud-Dev) phát triển và duy trì. Các template được thiết kế để import trực tiếp vào Pterodactyl, phục vụ nhiều nhu cầu từ website, ứng dụng lập trình, AI đến Minecraft và proxy.
 
 <p align="center">
-  <strong>23 Egg</strong> · <strong>6 nhóm</strong> · <code>PTDL_v2</code>
+  <strong>24 Egg</strong> · <strong>6 nhóm</strong> · <code>PTDL_v2</code>
 </p>
 
 ## Mục lục
@@ -23,7 +23,7 @@ Bộ **Egg Pterodactyl** do [STA Cloud Dev](https://github.com/STA-Cloud-Dev) ph
 | Nhóm | Số lượng | Nội dung |
 | --- | :---: | --- |
 | AI | 1 | OpenClaw Gateway |
-| Ngôn ngữ lập trình | 6 | Bun, C#/.NET, Go, Java, Node.js và Python |
+| Ngôn ngữ lập trình | 7 | Bun, C#/.NET, Go, Java, Node.js, Python và Rust |
 | PHP và Web | 4 | PHP Web, Laravel, WordPress và phpMyAdmin |
 | Minecraft | 9 | Vanilla, Paper, Fabric, Forge, Folia, CanvasMC và proxy |
 | Proxy | 2 | STAShield và Velocity |
@@ -41,12 +41,13 @@ Bộ **Egg Pterodactyl** do [STA Cloud Dev](https://github.com/STA-Cloud-Dev) ph
 
 | Egg | Tệp | Runtime / ghi chú |
 | --- | --- | --- |
-| Bun Generic | [`code-languages/BunGeneric.json`](code-languages/BunGeneric.json) | Bun stable mới nhất; chạy JavaScript/TypeScript từ Git repository hoặc file upload. |
-| C Generic | [`code-languages/CGeneric.json`](code-languages/CGeneric.json) | .NET 8 và .NET 10; chạy dự án C# từ Git repository hoặc file upload. |
-| Golang Generic | [`code-languages/GolangGeneric.json`](code-languages/GolangGeneric.json) | Go 1.24, 1.26 và 1.27; tải, build và chạy ứng dụng Go. |
+| Bun Generic | [`code-languages/BunGeneric.json`](code-languages/BunGeneric.json) | Bun stable mới nhất; chạy JavaScript/TypeScript từ Git HTTPS hoặc file upload. |
+| C# / .NET Generic | [`code-languages/CGeneric.json`](code-languages/CGeneric.json) | .NET 10 LTS mặc định, .NET 11 STS và .NET 8 legacy. |
+| Go Generic | [`code-languages/GolangGeneric.json`](code-languages/GolangGeneric.json) | Go 1.27 mặc định, Go 1.26 và Go 1.24 legacy. |
 | Java Generic | [`code-languages/JavaGeneric.json`](code-languages/JavaGeneric.json) | Java 8, 11, 17, 21 và 25; chạy ứng dụng từ file JAR. |
-| Node.js Generic | [`code-languages/NodejsGeneric.json`](code-languages/NodejsGeneric.json) | Node.js 22, 24 và 26; chạy ứng dụng JavaScript/TypeScript. |
-| Python Generic | [`code-languages/PythonGeneric.json`](code-languages/PythonGeneric.json) | Python 3.10 đến 3.14; chạy ứng dụng từ Git repository hoặc file upload. |
+| Node.js Generic | [`code-languages/NodejsGeneric.json`](code-languages/NodejsGeneric.json) | Node.js 26 LTS mặc định, Node.js 24 và 22 LTS. |
+| Python Generic | [`code-languages/PythonGeneric.json`](code-languages/PythonGeneric.json) | Python 3.15 mặc định, Python 3.11–3.14 và Python 3.10 legacy/EOL. |
+| Rust Generic | [`code-languages/RustGeneric.json`](code-languages/RustGeneric.json) | Rust 1.100 ổn định mặc định hoặc rolling stable; build bằng Cargo. |
 
 ### PHP và Web
 

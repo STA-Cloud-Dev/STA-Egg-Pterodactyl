@@ -1,14 +1,14 @@
 {
-    "_comment": "KHÔNG CHỈNH SỬA: TỆP ĐƯỢC TẠO BỞI STACLOUD",
+    "_comment": "STA Cloud Code Languages. Shared startup/install sources: code-languages/.",
     "meta": {
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2026-03-07T00:00:00+00:00",
-    "name": "Java Generic",
+    "exported_at": "2026-11-23T00:00:00+07:00",
+    "name": "STA Cloud | Java",
     "author": "stacloud.dev@gmail.com",
     "uuid": "2b7e1516-28ae-4d3b-bf2c-9c7ab0f5d001",
-    "description": "Java Generic Egg cho STACloud — chi giu cac ban Java LTS va chay ung dung Java tu file JAR.",
+    "description": "STA Cloud Java runtime. Chạy file JAR trên các dòng Java LTS 8, 11, 17, 21, 25; upload JAR và chọn JARFILE.",
     "features": null,
     "docker_images": {
         "Java 25 (LTS)": "ghcr.io/sta-cloud-dev/deverlopment:java_25",

@@ -1,19 +1,19 @@
 {
-    "_comment": "KHONG CHINH SUA: TEP DUOC TAO BOI STACLOUD",
+    "_comment": "STA Cloud Code Languages. Shared startup/install sources: code-languages/.",
     "meta": {
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2026-03-09T00:00:00+00:00",
-    "name": "Golang Generic",
+    "exported_at": "2026-11-23T00:00:00+07:00",
+    "name": "STA Cloud | Go",
     "author": "stacloud.dev@gmail.com",
     "uuid": "23520a9e-0711-4083-bad8-5601d635eb83",
-    "description": "Golang Generic Egg cho STACloud, giu ban mac dinh cu va bo sung cac ban Go stable moi de tai va build ung dung Go thanh file thuc thi.",
+    "description": "STA Cloud Go runtime. Cài GO_PACKAGE thành executable hoặc chạy binary upload. Go 1.27 mặc định; Go 1.24 chỉ giữ tương thích cũ.",
     "features": null,
     "docker_images": {
-        "Golang 1.24 (Default)": "ghcr.io/sta-cloud-dev/deverlopment:golang1.24",
-        "Golang 1.27": "ghcr.io/sta-cloud-dev/deverlopment:golang1.27",
-        "Golang 1.26": "ghcr.io/sta-cloud-dev/deverlopment:golang1.26"
+        "Golang 1.27 (Default)": "ghcr.io/sta-cloud-dev/deverlopment:golang1.27",
+        "Golang 1.26": "ghcr.io/sta-cloud-dev/deverlopment:golang1.26",
+        "Golang 1.24 (Legacy)": "ghcr.io/sta-cloud-dev/deverlopment:golang1.24"
     },
     "file_denylist": [],
     "startup": "bash /opt/stacloud/code-languages/start.sh golang",

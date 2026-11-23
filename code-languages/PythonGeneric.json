@@ -1,21 +1,22 @@
 {
-    "_comment": "KHÔNG CHỈNH SỬA: TỆP ĐƯỢC TẠO BỞI STACLOUD - TROLYAMAZON",
+    "_comment": "STA Cloud Code Languages. Shared startup/install sources: code-languages/.",
     "meta": {
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2026-02-28T00:00:00+00:00",
-    "name": "Python Generic",
+    "exported_at": "2026-11-23T00:00:00+07:00",
+    "name": "STA Cloud | Python",
     "author": "stacloud.dev@gmail.com",
     "uuid": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    "description": "Python Generic Egg cho STACloud — hỗ trợ các bản Python stable còn phù hợp, không bao gồm preview hoặc EOL, chạy ứng dụng Python từ Git repo hoặc file upload.",
+    "description": "STA Cloud Python runtime. Chạy Python từ Git HTTPS hoặc file upload; cài pip và requirements khi khởi động. Python 3.10 chỉ giữ tương thích cũ.",
     "features": null,
     "docker_images": {
-        "Python 3.14 (Default)(Debian12)": "ghcr.io/sta-cloud-dev/deverlopment:python_3.14",
+        "Python 3.15 (Stable, Default)": "ghcr.io/sta-cloud-dev/deverlopment:python_3.15",
+        "Python 3.14 (Debian12)": "ghcr.io/sta-cloud-dev/deverlopment:python_3.14",
         "Python 3.13 (Debian12)": "ghcr.io/sta-cloud-dev/deverlopment:python_3.13",
         "Python 3.12 (Debian12)": "ghcr.io/sta-cloud-dev/deverlopment:python_3.12",
         "Python 3.11 (Debian12)": "ghcr.io/sta-cloud-dev/deverlopment:python_3.11",
-        "Python 3.10 (Security only)(Debian12)": "ghcr.io/sta-cloud-dev/deverlopment:python_3.10"
+        "Python 3.10 (Legacy, EOL) (Debian12)": "ghcr.io/sta-cloud-dev/deverlopment:python_3.10"
     },
     "file_denylist": [],
     "startup": "bash /opt/stacloud/code-languages/start.sh python",

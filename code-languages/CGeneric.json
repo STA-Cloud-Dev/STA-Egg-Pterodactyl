@@ -1,18 +1,19 @@
 {
-    "_comment": "KHONG CHINH SUA: TEP DUOC TAO BOI STACLOUD",
+    "_comment": "STA Cloud Code Languages. Shared startup/install sources: code-languages/.",
     "meta": {
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2026-03-09T00:00:00+00:00",
-    "name": "C Generic",
+    "exported_at": "2026-11-23T00:00:00+07:00",
+    "name": "STA Cloud | C# / .NET",
     "author": "stacloud.dev@gmail.com",
     "uuid": "4720cb89-cfa7-44b2-90c7-685c7b8887f2",
-    "description": "C# Generic Egg cho STACloud, chi giu cac ban .NET LTS va chay du an tu Git repo hoac file upload.",
+    "description": "STA Cloud C# / .NET runtime. Chạy dự án C#/.NET từ Git HTTPS hoặc file upload. .NET 10 LTS mặc định; .NET 8 chỉ giữ tương thích cũ.",
     "features": null,
     "docker_images": {
-        "Dotnet 8 (LTS Default)": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_8",
-        "Dotnet 10 (LTS)": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_10"
+        "Dotnet 10 (LTS, Default)": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_10",
+        "Dotnet 11 (STS)": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_11",
+        "Dotnet 8 (Legacy, EOL)": "ghcr.io/sta-cloud-dev/deverlopment:dotnet_8"
     },
     "file_denylist": [],
     "startup": "bash /opt/stacloud/code-languages/start.sh dotnet",
